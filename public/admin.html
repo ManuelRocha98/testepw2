@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="testeII.css">
+</head>
+
+<body>
+    <div id="app">
+        <h1>Criação de Rotas</h1>
+
+        Origem:
+        <select v-model="origin">
+            <option value="amarante">Amarante</option>
+            <option value="baião">Baião</option>
+            <option value="felgueiras">Felgueiras</option>
+            <option value="gondomar">Gondomar</option>
+            <option value="lousada">Lousada</option>
+            <option value="maia">Maia</option>
+            <option value="marcoDeCanaveses">Marco de Canaveses</option>
+            <option value="matosinhos">Matosinhos</option>
+            <option value="paçosDeFerreira">Paços de Ferreira</option>
+            <option value="paredes">Paredes</option>
+            <option value="penafiel">Penafiel</option>
+            <option value="povoaDeVarzim">Póvoa de Varzim</option>
+            <option value="santoTirso">Santo Tirso</option>
+            <option value="trofa">Trofa</option>
+            <option value="valongo">Valongo</option>
+            <option value="vilaDoConde">Vila do Conde</option>
+            <option value="gaia">Vila Nova de Gaia</option>
+        </select>
+        <br>
+        Destino:
+        <select v-model="destination">
+            <option value="amarante">Amarante</option>
+            <option value="baião">Baião</option>
+            <option value="felgueiras">Felgueiras</option>
+            <option value="gondomar">Gondomar</option>
+            <option value="lousada">Lousada</option>
+            <option value="maia">Maia</option>
+            <option value="marcoDeCanaveses">Marco de Canaveses</option>
+            <option value="matosinhos">Matosinhos</option>
+            <option value="paçosDeFerreira">Paços de Ferreira</option>
+            <option value="paredes">Paredes</option>
+            <option value="penafiel">Penafiel</option>
+            <option value="povoaDeVarzim">Póvoa de Varzim</option>
+            <option value="santoTirso">Santo Tirso</option>
+            <option value="trofa">Trofa</option>
+            <option value="valongo">Valongo</option>
+            <option value="vilaDoConde">Vila do Conde</option>
+            <option value="gaia">Vila Nova de Gaia</option>
+        </select>
+        <br>
+        Tempo:
+        <input type="text" name="city" id="routeCity" v-model="time" />
+        <br>
+        Custo:
+        <input type="text" name="city" id="routeCity" v-model="cost" />
+        <br>
+        Horário (separar horários diferentes por vírgulas):
+        <input type="text" name="city" id="routeCity" v-model="schedule" />
+        <br>
+        <button @click="postRoute()">Submit</button>
+        <br><br><br>
+
+        <h1>Gestão de Rotas</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">origem</th>
+                    <th scope="col">Destino</th>
+                    <th scope="col">Tempo</th>
+                    <th scope="col">Custo</th>
+                    <th scope="col">Horário</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableValues">
+                <tr v-for=" route in this.info.data" :key="route.id ">
+                    <td>{{ route.origem }}</td>
+                    <td>{{ route.destino }}</td>
+                    <td>{{ route.tempo }}</td>
+                    <td>{{ route.custo }}</td>
+                    <td>{{ route.horario }}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-lg" @click="removeRoute(route.id_percurso)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-lg" @click="updateRoute(route.id_percurso)">
+                            <span class="glyphicon glyphicon-resize-vertical"></span>
+                        </button>
+                    </td>
+                    <td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+        </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</body>
+
+<script>
+    new Vue({
+
+        el: '#app',
+        data() {
+            return {
+                info: null,
+                errored: false,
+                loading: false,
+                errorMsg: "Erro de API. Por favor tente novamente mais tarde.",
+                origin: "",
+                destination: "",
+                time: "",
+                cost: "",
+                schedule: ""
+            }
+        },
+        created() {
+            this.getRoutes()
+        },
+
+        methods: {
+            postRoute: function () {
+                axios
+                    .post('http://127.0.0.1:3000/routes/', {
+                        origin: this.origin,
+                        destination: this.destination,
+                        time: this.time,
+                        cost: this.cost,
+                        schedule: this.schedule
+
+                    })
+                    .then(response => {
+                        this.info = response;
+                        console.log("status: " + response)
+                        alert("rota inserida com sucesso")
+                    })
+                    .catch(function (error) {
+                        this.errored = true
+                        console.log(error)
+                    })
+                    .finally(() => this.loading = false)
+
+            },
+            getRoutes: function () {
+                axios
+                    .get('http://127.0.0.1:3000/routes/')
+                    .then(response => {
+                        this.info = response;
+                        console.log("status: " + response)
+                    })
+                    .catch(function (error) {
+                        this.errored = true
+                        console.log(error)
+                    })
+                    .finally(() => this.loading = false)
+            },
+            updateRoute(routeId) {
+                if (confirm("Tem a certeza que pretende alterar o custo?")) {
+                    axios
+                        .update('http://127.0.0.1:3000/routes/' + routeId, {
+                        })
+                        .then(response => {
+                            this.info = response;
+                            console.log("status: " + response)
+                            alert("rota atualizada com sucesso")
+                        })
+                        .catch(function (error) {
+                            this.errored = true
+                            console.log(error)
+                        })
+                        .finally(() => this.loading = false)
+
+
+                }
+                alert("Custo alterado com successo")
+            },
+            removeRoute(routeId) {
+                if (confirm("Tem a certeza que quer remover esta rota?")) {
+                    axios
+                        .delete('http://127.0.0.1:3000/routes/' + routeId, {
+                        })
+                        .then(response => {
+                            this.info = response;
+                            console.log("status: " + response)
+                            alert("rota apagada com sucesso")
+                        })
+                        .catch(function (error) {
+                            this.errored = true
+                            console.log(error)
+                        })
+                        .finally(() => this.loading = false)
+
+                }
+            },
+        },
+    })
+
+</script>
+
+</html>

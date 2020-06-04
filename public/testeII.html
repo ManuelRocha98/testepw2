@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="testeII.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+
+<body>
+
+    <div id="app">
+        <h1>Simulador de rotas de Municípios do Porto</h1>
+        <div class="container">
+            <div class="row">
+                <div class="selects">
+                    <h4>Selecionar Pontos</h4>
+
+                    <label for="start">Ponto de partida:</label>
+                    <select name="start" id="start" v-model="selectedStart">
+                        <option value="amarante">Amarante</option>
+                        <option value="baião">Baião</option>
+                        <option value="felgueiras">Felgueiras</option>
+                        <option value="gondomar">Gondomar</option>
+                        <option value="lousada">Lousada</option>
+                        <option value="maia">Maia</option>
+                        <option value="marcoDeCanaveses">Marco de Canaveses</option>
+                        <option value="matosinhos">Matosinhos</option>
+                        <option value="paçosDeFerreira">Paços de Ferreira</option>
+                        <option value="paredes">Paredes</option>
+                        <option value="penafiel">Penafiel</option>
+                        <option value="povoaDeVarzim">Póvoa de Varzim</option>
+                        <option value="santoTirso">Santo Tirso</option>
+                        <option value="trofa">Trofa</option>
+                        <option value="valongo">Valongo</option>
+                        <option value="vilaDoConde">Vila do Conde</option>
+                        <option value="gaia">Vila Nova de Gaia</option>
+                    </select>
+
+
+                    <label for="end">Ponto de chegada:</label>
+                    <select name="end" id="end" v-model="selectedEnd">
+                        <option value="amarante">Amarante</option>
+                        <option value="baião">Baião</option>
+                        <option value="felgueiras">Felgueiras</option>
+                        <option value="gondomar">Gondomar</option>
+                        <option value="lousada">Lousada</option>
+                        <option value="maia">Maia</option>
+                        <option value="marcoDeCanaveses">Marco de Canaveses</option>
+                        <option value="matosinhos">Matosinhos</option>
+                        <option value="paçosDeFerreira">Paços de Ferreira</option>
+                        <option value="paredes">Paredes</option>
+                        <option value="penafiel">Penafiel</option>
+                        <option value="povoaDeVarzim">Póvoa de Varzim</option>
+                        <option value="santoTirso">Santo Tirso</option>
+                        <option value="trofa">Trofa</option>
+                        <option value="valongo">Valongo</option>
+                        <option value="vilaDoConde">Vila do Conde</option>
+                        <option value="gaia">Vila Nova de Gaia</option>
+                    </select>
+                    <button @click="getChosenRoute()">Submit</button>
+                </div>
+
+
+            </div>
+            <div class="row">
+
+                <h4>Horário: {{schedule}}</h4>
+
+
+
+            </div>
+        </div>
+
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                selectedStart: '',
+                selectedEnd: '',
+                info: null,
+                errored: false,
+                loading: false,
+                errorMsg: "Erro de API. Por favor tente novamente mais tarde.",
+                origin: "",
+                destination: "",
+                schedule: ""
+            },
+
+            created() {
+                this.getRoutes()
+            },
+
+            methods: {
+                getRoutes: function () {
+                    axios
+                        .get('http://127.0.0.1:3000/routes/')
+                        .then(response => {
+                            this.info = response;
+                            console.log("status: " + response)
+                        })
+                        .catch(function (error) {
+                            this.errored = true
+                            console.log(error)
+                        })
+                        .finally(() => this.loading = false)
+
+                },
+                getChosenRoute() {
+                    //this.info.data
+                    for (let i = 0; i < this.info.data.length; i++) {
+                        if (this.info.data[i].origem == this.selectedStart && this.info.data[i].destino == this.selectedEnd) {
+                            this.schedule = this.info.data[i].horario
+
+                        }
+                    }
+
+                }
+                
+            },
+
+        })
+
+
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+        </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+        </script>
+
+</body>
+
+</html>

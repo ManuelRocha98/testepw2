@@ -1,0 +1,27 @@
+#app{
+    margin: 0 auto;
+    text-align: left;
+}
+
+.container{
+    margin: 0 auto;
+    position: relative;
+    width: 20%;
+    justify-content: left;
+    text-align: left;
+    margin-left: 50px;
+}
+
+.row{
+    margin-left: 0px;
+}
+
+
+select{
+    margin: 0 auto;
+}
+
+h1{
+    text-align: left;
+    margin-left: 4%;
+}
