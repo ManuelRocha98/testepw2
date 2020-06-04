@@ -3,5 +3,6 @@ Teste de Programação Web II do Manuel Rocha, Miguel Teixeira e Eduardo Madeira
 
 Funções:
 
-Inserir/apagar percursos
-Procurar horário de um percurso
+- Inserir/apagar percursos;
+
+- Procurar horário de um percurso;
